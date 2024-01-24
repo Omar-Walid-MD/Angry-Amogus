@@ -30,7 +30,7 @@ with open("save.json") as save:
     saveData = json.load(save)
 
 currentLevelPassed = saveData["currentLevel"]
-# currentLevelPassed = len(allLevels)-1
+currentLevelPassed = len(allLevels)-1
 
 drawOptions = pymunk.pygame_util.DrawOptions(screen)
 
@@ -1376,6 +1376,7 @@ def startLevel(levelIndex):
         tutorialImage = GameObject((screen_width/2,screen_height/2),(500,500),image=tutorialDict[f"{levelIndex+1}"],layer=3)
     else:
         tutorialImage = None
+        
 
     particles = []
 
@@ -1464,8 +1465,6 @@ if __name__=="__main__":
 
             mouse = mult(pygame.mouse.get_pos(),cam.zoom)
 
-
-
             pos = subtr(slingShotPos,cam.getPos())
             ballToMouse = subtr(pos,mouse)
             ballToMouseMag = mag(ballToMouse)
@@ -1490,6 +1489,7 @@ if __name__=="__main__":
                         if tutorialImage:
                             gameObjects.remove(tutorialImage)
                             tutorialImage = None
+                            playSound(clickSound)
                         else:
                             if mainBall and readyToAim and mag(ballToMouse) <= maxPullMag:
                                 aiming = True
@@ -1530,6 +1530,9 @@ if __name__=="__main__":
                         startLevel(currentLevelIndex)
                     elif event.key == pygame.K_ESCAPE:
                         backToMenu()
+                    elif event.key == pygame.K_F11:
+                        pygame.display.toggle_fullscreen()
+
 
             if not level:
                 continue
@@ -1636,10 +1639,21 @@ if __name__=="__main__":
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: running = False
 
-                if menu == "main":
-                    handleButtonEvents(mainMenuButtons,event)
-                elif menu == "levels":
-                    handleButtonEvents(levelMenuButtons,event)
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if menu == "main":
+                        handleButtonEvents(mainMenuButtons,event)
+                    elif menu == "levels":
+                        handleButtonEvents(levelMenuButtons,event)
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_F11:
+                        pygame.display.toggle_fullscreen()
+
+                    elif event.key == pygame.K_ESCAPE:
+                        if menu == "main":
+                            running = False
+                        elif menu == "levels":
+                            chooseMenu("main")
 
             if level:
                 continue
