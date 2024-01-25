@@ -30,7 +30,7 @@ with open("save.json") as save:
     saveData = json.load(save)
 
 currentLevelPassed = saveData["currentLevel"]
-currentLevelPassed = len(allLevels)-1
+# currentLevelPassed = len(allLevels)-1
 
 drawOptions = pymunk.pygame_util.DrawOptions(screen)
 
